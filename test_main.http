@@ -1,0 +1,25 @@
+### 用户注册
+POST http://127.0.0.1:8000/api/v1/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "123456"
+}
+
+### 用户登录
+POST http://127.0.0.1:8000/api/v1/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "123456"
+}
+
+### 获取当前用户（把 token 替换为登录返回的 token）
+GET http://127.0.0.1:8000/api/v1/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+### 用户列表
+GET http://127.0.0.1:8000/api/v1/users?skip=0&limit=10
