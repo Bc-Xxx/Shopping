@@ -5,16 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5af326f9-ff09-4fc8-bece-317b6c766167" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/pg.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_main.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/routers/admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/logger.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/redis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LEARNING_EXTRA.md" beforeDir="false" afterPath="$PROJECT_DIR$/LEARNING_EXTRA.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routers/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routers/auth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routers/category.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routers/category.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routers/product.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routers/product.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/schemas/category.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/schemas/category.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/schemas/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/schemas/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/security.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/security.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +50,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -100,7 +104,10 @@
       <updated>1781705219089</updated>
       <workItem from="1781705220484" duration="7883000" />
       <workItem from="1781836439264" duration="31714000" />
-      <workItem from="1781929217543" duration="42077000" />
+      <workItem from="1781929217543" duration="42739000" />
+      <workItem from="1782042964150" duration="5788000" />
+      <workItem from="1782090505791" duration="2159000" />
+      <workItem from="1782111210571" duration="9447000" />
     </task>
     <servers />
   </component>
