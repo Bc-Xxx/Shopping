@@ -27,7 +27,8 @@ async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=400, detail="用户名已存在")
     new_user = User(
         username=user_data.username,
-        hash_password=hash_password(user_data.password)
+        hash_password=hash_password(user_data.password),
+        role=user_data.role
     )
     db.add(new_user)
     await db.commit()
@@ -37,8 +38,8 @@ async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
 
 @router.post("/login")
 async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: AsyncSession = Depends(get_db),
+        form_data: OAuth2PasswordRequestForm = Depends(),
+        db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(select(User).where(User.username == form_data.username))
     user = result.scalar_one_or_none()
