@@ -7,6 +7,7 @@ from app.models.category import Category
 from app.database import get_db
 from app.models import Product, User
 from app.schemas.product import ProductOut, ProductCreate, ProductUpdate, PaginatedProducts, SearchResult
+from app.utils.redis import get_cache, set_cache, clear_cache, delete_cache
 from app.utils.security import get_current_user
 
 router = APIRouter()
@@ -34,6 +35,7 @@ async def create_product(
     db.add(new_product)
     await db.commit()
     await db.refresh(new_product)
+    await clear_cache("products:list:*")
     return new_product
 
 
@@ -43,30 +45,57 @@ async def list_products(
         limit: int = 20,
         db: AsyncSession = Depends(get_db),
 ):
-    query = (
-        select(
-            Product,
-            Category.name.label("category_name"),
-            func.count().over().label("total"),
-        )
-        .outerjoin(Category, Product.category_id == Category.id)
-        .order_by(Product.created_at.desc())
-        .offset(skip)
-        .limit(limit)
-    )
-    rows = (await db.execute(query)).all()
+    cache_key = f"products:list:{skip}:{limit}"
 
+    # 1. 查缓存
+    cached = await get_cache(cache_key)
+    if cached:
+        return PaginatedProducts(**cached)
+
+    # 2. cache miss → 查 DB
+    query = (select(Product, Category.name.label("category_name"),
+                    func.count().over().label("total"))
+             .outerjoin(Category, Product.category_id == Category.id)
+             .order_by(Product.created_at.desc()).offset(skip).limit(limit))
+    rows = (await db.execute(query)).all()
     if not rows:
         return PaginatedProducts(total=0, items=[])
-
     total = rows[0].total
     items = []
     for row in rows:
         product = row[0]
         product.category_name = row.category_name
-        items.append(product)
+        items.append(ProductOut.model_validate(product).model_dump())
 
-    return PaginatedProducts(total=total, items=items)
+    # 3. 写回缓存
+    result = PaginatedProducts(total=total, items=items)
+    await set_cache(cache_key, result.model_dump(), ttl=300)
+    return result
+
+    # query = (
+    #     select(
+    #         Product,
+    #         Category.name.label("category_name"),
+    #         func.count().over().label("total"),
+    #     )
+    #     .outerjoin(Category, Product.category_id == Category.id)
+    #     .order_by(Product.created_at.desc())
+    #     .offset(skip)
+    #     .limit(limit)
+    # )
+    # rows = (await db.execute(query)).all()
+    #
+    # if not rows:
+    #     return PaginatedProducts(total=0, items=[])
+    #
+    # total = rows[0].total
+    # items = []
+    # for row in rows:
+    #     product = row[0]
+    #     product.category_name = row.category_name
+    #     items.append(product)
+    #
+    # return PaginatedProducts(total=total, items=items)
 
 
 @router.get("/products/search", response_model=SearchResult, description="按内容搜索商品")
@@ -108,11 +137,23 @@ async def get_product(
         id: int,
         db: AsyncSession = Depends(get_db),
 ):
+    # 1. 查缓存
+    cached = await get_cache(f"product:{id}")
+    if cached:
+        return cached
+    # 2. cache miss → 查 DB
     result = await db.execute(select(Product).where(Product.id == id))
     product = result.scalar_one_or_none()
     if not product:
         raise HTTPException(status_code=404, detail="找不到这个商品")
+    # 3. 写回缓存
+    await set_cache(f"product:{id}", ProductOut.model_validate(product).model_dump(), ttl=300)
     return product
+    # result = await db.execute(select(Product).where(Product.id == id))
+    # product = result.scalar_one_or_none()
+    # if not product:
+    #     raise HTTPException(status_code=404, detail="找不到这个商品")
+    # return product
 
 
 @router.delete("/products/{id}", description="按id删除商品")
@@ -129,6 +170,8 @@ async def delete_product(
         raise HTTPException(status_code=404, detail="找不到这个商品")
     await db.delete(product)
     await db.commit()
+    await delete_cache(f"product:{id}")
+    await clear_cache("products:list:*")
     return "删除成功"
 
 
@@ -159,4 +202,6 @@ async def update_product(
 
     await db.commit()
     await db.refresh(product)
+    await delete_cache(f"product:{id}")
+    await clear_cache("products:list:*")
     return product
