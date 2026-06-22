@@ -3,10 +3,13 @@ from typing import Optional
 
 from pydantic import BaseModel, field_validator
 
+VALID_ROLES = {"buyer", "seller"}
+
 
 class UserCreate(BaseModel):
     username: str
     password: str
+    role: str = "buyer"
 
     @field_validator("username")
     @classmethod
@@ -20,6 +23,13 @@ class UserCreate(BaseModel):
     def password_strength(cls, v: str):
         if len(v) < 6:
             raise ValueError("密码至少 6 位")
+        return v
+
+    @field_validator("role")
+    @classmethod
+    def role_valid(cls, v: str):
+        if v not in VALID_ROLES:
+            raise ValueError(f"角色必须是 {', '.join(VALID_ROLES)}")
         return v
 
 
