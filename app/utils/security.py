@@ -83,3 +83,13 @@ async def get_current_user(
     if not user:
         raise HTTPException(status_code=401, detail="用户不存在")
     return user
+
+
+# 验证是不是admin
+def require_roles(allowed_roles: list[str]):
+    async def role_checker(current_user: User = Depends(get_current_user)):
+        if current_user.role not in allowed_roles:
+            raise HTTPException(status_code=403, detail="权限不足")
+        return current_user
+
+    return role_checker
